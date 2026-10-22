@@ -29,6 +29,12 @@ _This file is how a new AI session (or future me) recovers context. Update it at
 3. Debug for 15 minutes alone before asking; bring a hypothesis.
 4. Ownership gate before merge: I can explain every file, rewrite the hard function from memory, name a boundary case.
 5. Never push to `main`; every build goes `build-N` -> PR -> merge.
+6. **25-minute rule:** if a concept has not clicked, stop reading about it and do something with it (draw it, run it, break it). Re-reading is not the fix.
+7. **Three passes per build,** because once is never enough:
+   - *Pass A (understand):* read the milestone, write my spec, explain it back. No code.
+   - *Pass B (build):* AI drafts from my spec; I review line by line and hand-write the core functions.
+   - *Pass C (retrieve):* 2-3 days later, on a throwaway branch, rebuild one core file from memory, then diff it against my own work and delete the branch.
+8. Recall drills: day 1 (5 min, answer written questions), day 3 (20 min, rebuild from memory), day 7 (5 min, explain it in the PR/demo).
 
 ## Memory files
 
