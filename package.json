@@ -1,0 +1,12 @@
+{
+  "name": "my-dsa-capstone-project",
+  "version": "1.000",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "demo": "node scripts/demo.js",
+    "benchmark": "node scripts/benchmark-lookup.js"
+  }
+}
