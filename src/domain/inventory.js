@@ -25,6 +25,15 @@ export const createEvent = (
     );
   }
 
+  // startsAt must be a real date, not just a non-empty string.
+  const startsAtDate = new Date(startsAt);
+  if (Number.isNaN(startsAtDate.getTime())) {
+    throw new DomainError(
+      "VALIDATION",
+      "startsAt must be a valid date",
+    );
+  }
+
   const eventId = newId();
   const event = {
     id: eventId,
@@ -47,10 +56,14 @@ export const addTier = (store, eventId, { name, priceCents, capacity }) => {
     throw new DomainError("NOT_FOUND", "Event not found");
   }
 
-  if (priceCents < 0 || capacity <= 0) {
+  if (
+    !Number.isInteger(priceCents) ||
+    priceCents < 0 ||
+    capacity <= 0
+  ) {
     throw new DomainError(
       "VALIDATION",
-      "Price cannot be negative and capacity must be positive",
+      "Price must be a whole number and cannot be negative; capacity must be positive",
     );
   }
 
@@ -165,4 +178,62 @@ export const joinWaitlist = (store, tierId, userId, quantity) => {
   queue.enqueue(waitlistEntry);
 
   return waitlistEntry;
+};
+
+export const publishEvent = (store, eventId) => {
+  // Look the event up by id.
+  const event = store.events.get(eventId);
+  if (!event) {
+    throw new DomainError("NOT_FOUND", "Event not found");
+  }
+
+  const hasTiers = Array.from(store.tiers.values()).some(
+    (tier) => tier.eventId === eventId,
+  );
+  if (!hasTiers) {
+    throw new DomainError(
+      "INVALID_STATE",
+      "Cannot publish an event with no ticket tiers",
+    );
+  }
+
+  // Mark the event as published and return it.
+  event.status = "published";
+  return event;
+};
+
+export const listEventSummaries = (store, { publishedOnly = true } = {}) => {
+  const events = Array.from(store.events.values());
+
+  const filtered = publishedOnly
+    ? events.filter((event) => event.status === "published")
+    : events;
+
+  return filtered.map((event) => {
+    // Gather all tiers that belong to this event.
+    const eventTiers = Array.from(store.tiers.values()).filter(
+      (tier) => tier.eventId === event.id,
+    );
+
+    // The cheapest tier price (null when there are no tiers).
+    const prices = eventTiers.map((tier) => tier.priceCents);
+    const cheapestPriceCents = prices.length > 0 ? Math.min(...prices) : null;
+
+    // Total seats left across all tiers of this event.
+    const seatsLeft = eventTiers.reduce(
+      (total, tier) => total + (tier.capacity - tier.sold),
+      0,
+    );
+
+    return {
+      id: event.id,
+      title: event.title,
+      city: event.city,
+      venue: event.venue,
+      startsAt: event.startsAt,
+      status: event.status,
+      cheapestPriceCents,
+      seatsLeft,
+    };
+  });
 };
