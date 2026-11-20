@@ -1,12 +1,13 @@
 # Build 2: Event search, sorting, backlog, first tests
 
-*Week 5 of the course. Starts from the finished state of Build 1.*
+_Week 5 of the course. Starts from the finished state of Build 1._
 
 **You deliver:** search and filter events by text, city, date range and price; sort by date, price or availability using a merge sort you write yourself; the backlog written as user stories; your first automated tests.
 
 **You practise:** sorting algorithms, stability, Big O, Agile and Scrum, writing user stories with acceptance criteria.
 
 **Done when**
+
 - Search, filter and sort work and never change the original list.
 - Every user story you are building has acceptance criteria.
 - `npm test` runs and passes.
@@ -36,7 +37,14 @@
 
 ### S04: As an organizer, I want to publish and unpublish an event, so that I control when it goes public
 
-*Written by you, in pairs, during the Build 2 class. Add your three criteria here before you paste the AI prompt below.*
+_Written by you, in pairs, during the Build 2 class. Add your three criteria here before you paste the AI prompt below._
+
+**Given** a draft event
+**when** an organizer wants to publish an event with a status of draft to the public
+**then** the event is now public with 0 sold ticket and full capacity
+**Given** a published event
+**when** an organizer wants to unpublish an event and return the status to draft so it is not accesssible to the public,
+**then** then we chcek for the tiers of the event and see if there are paid or bookings aviable and refunds are planned/issuen to the owners/bookers/guests if they are available before orgabizer can unpublish
 
 ### S05: As an attendee, I want to search, filter and sort published events, so that I can find one I like
 
